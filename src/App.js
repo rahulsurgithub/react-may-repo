@@ -1,4 +1,4 @@
-import './App.css';
+// import './App.css';
 import React, { Component } from 'react';
 import ProductList from './components/products';
 import { paginate } from './components/paginate';
@@ -88,7 +88,6 @@ class App extends Component {
     const products = paginate(sorted, currentPage, pageSize);
 
     return (
-      <main className="container">
         <div className="row">
           <div className="col-3">
             <ListGroup 
@@ -112,7 +111,6 @@ class App extends Component {
             </ProductList>
           </div>
         </div>
-      </main>
     );
   }
 }

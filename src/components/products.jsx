@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Pagination from '../components/pagination';
 import Like from '../components/like'
+import {Link} from 'react-router-dom';
 
 class ProductList extends Component {
 
@@ -41,7 +42,7 @@ class ProductList extends Component {
                     <tbody>
                         { this.props.products.map(product => (
                             <tr scope="row" key={product.Id}>
-                                <td><a>{product.Title}</a></td>
+                                <td>{<Link to={`/products/${product.Id}`}>{product.Title}</Link>}</td>
                                 <td>{product.Category}</td>
                                 <td>{product.Quantity}</td>
                                 <td>{product.Price}</td>
