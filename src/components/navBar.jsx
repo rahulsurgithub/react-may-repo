@@ -28,6 +28,9 @@ class NavBar extends Component {
                     <Nav.Link as={NavLink} className="nav-item nav-link" to="/login">
                         Login
                     </Nav.Link>
+                    <Nav.Link as={NavLink} className="nav-item nav-link" to="/register">
+                        Register
+                    </Nav.Link>
                 </div>
             </div>
         </nav>

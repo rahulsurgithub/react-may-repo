@@ -2,10 +2,12 @@ import React, { Component } from 'react';
 import Pagination from '../components/pagination';
 import Like from '../components/like'
 import {Link} from 'react-router-dom';
+import SearchBox from '../components/searchBox';
 
 class ProductList extends Component {
 
     raiseSortEvent = (columnName) => {
+        debugger;
         const sortColumn = {...this.props.sortColumn};
         if (sortColumn.path === columnName) {
           sortColumn.order = (sortColumn.order === "asc") ? "desc" : "asc";
@@ -20,14 +22,21 @@ class ProductList extends Component {
 
     render() { 
         const { length: count } = this.props.allProducts;
-        //const { onSort } = this.props;
 
         if(count === 0) 
             return <p>There are no products in database.</p>
 
         return (
             <React.Fragment>
+                <Link 
+                    to="/products/new"
+                    className="btn btn-primary"
+                    style={{ marginBottom : 20 }}
+                >
+                    New Product
+                </Link>
                 <p>There are {count} products.</p>
+                <SearchBox value={this.props.searchQuery} onChange={this.props.handleSearch}></SearchBox>
                 <table className="table">
                     <thead>
                         <tr style={{ cursor: "pointer" }}>
@@ -41,9 +50,9 @@ class ProductList extends Component {
                     </thead>
                     <tbody>
                         { this.props.products.map(product => (
-                            <tr scope="row" key={product.Id}>
-                                <td>{<Link to={`/products/${product.Id}`}>{product.Title}</Link>}</td>
-                                <td>{product.Category}</td>
+                            <tr scope="row" key={product._id}>
+                                <td>{<Link to={`/products/${product._id}`}>{product.Title}</Link>}</td>
+                                <td>{product.Category.name}</td>
                                 <td>{product.Quantity}</td>
                                 <td>{product.Price}</td>
                                 <td>
@@ -51,7 +60,7 @@ class ProductList extends Component {
                                 </td>
                                 <td>
                                     <button type="button" 
-                                    onClick={() => this.props.onDelete(product.Id)} 
+                                    onClick={() => this.props.onDelete(product._id)} 
                                     className="btn btn-danger">Delete</button>
                                 </td>
                             </tr>

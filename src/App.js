@@ -1,13 +1,16 @@
-// import './App.css';
 import React, { Component } from 'react';
 import ProductList from './components/products';
 import { paginate } from './components/paginate';
 import ListGroup from './components/listGroup';
-import { getCategories } from './services/fakeProductCategoryService';
+import { getCategories } from './services/categoryService';
+import { getProducts, deleteProduct } from './services/productsService';
 import _ from 'lodash';
+import { toast } from "react-toastify";
 
 class App extends Component {
   state = { 
+    products: [],
+    /*
     products: [
       { Id: 1, Title: 'TV', Category: 'Electronic', Quantity: 5, Price: 100000, IsDeleted: false, liked: false },
       { Id: 2, Title: 'Bed', Category: 'Furniture', Quantity: 2, Price: 50000, IsDeleted: false, liked: false },
@@ -20,10 +23,13 @@ class App extends Component {
       { Id: 9, Title: 'Option 5', Category: 'Electronic', Quantity: 12, Price: 30000, IsDeleted: false, liked: false },
       { Id: 10, Title: 'Option 6', Category: 'Electronic', Quantity: 13, Price: 30000, IsDeleted: false, liked: false }
     ],
+    */
     pageSize: 4,
     currentPage: 1,
     categories:[],
-    sortColumn: { path: 'Title', order: 'asc' }
+    sortColumn: { path: 'Title', order: 'asc' },
+    searchQuery: "", 
+    selectedCategory: null
    };
 
   constructor() {
@@ -31,15 +37,32 @@ class App extends Component {
     console.log("App- contructor");
   }
 
-  componentDidMount() {
-    const categories = [ {_id: -1, name: "All Categories"}, ...getCategories() ];
-    this.setState({ categories: categories });
+  async componentDidMount() {
+    const { data } = await getCategories();
+    const categories = [ {_id: -1, name: "All Categories"}, ...data ];
+    debugger;
+    const { data: products } = await getProducts();
+    this.setState({ categories: categories, products: products });
   }
 
-  handleDelete = (productId) => {
+  handleDelete = async productId => {
+    debugger;
     console.log("Delete called at products", productId);
-    let newProducts = this.state.products.filter(item => item.Id !== productId);
+    const originalProducts = this.state.products;
+    const newProducts = originalProducts.filter(item => item._id != productId);
     this.setState({ products : newProducts });
+
+    try {
+      await deleteProduct(productId);
+    }
+    catch (ex) {
+      if(ex.response && ex.response.status === 404) {
+        toast.error("this product has already been deleted.");
+        //console.log("this product has already been deleted.");
+        this.setState({ products : originalProducts });
+      }
+    }
+    
   };
 
   handleLike = (product) => {
@@ -57,31 +80,33 @@ class App extends Component {
   };
 
   handleItemSelected = (category) => {
+    debugger;
     console.log(category);
-    this.setState({ selectedCategory: category, currentPage: 1 });
+    this.setState({ selectedCategory: category, searchQuery: "", currentPage: 1 });
+  };
+
+  handleSearch = query => {
+    this.setState({ searchQuery: query, selectedCategory: null, currentPage: 1 });
   };
 
   handleSort = sortedColumn => {
-    /*
-    console.log(path);
-    const sortColumn = {...this.state.sortColumn};
-    if (sortColumn.path === path) {
-      sortColumn.order = (sortColumn.order === "asc") ? "desc" : "asc";
-    }
-    else {
-      sortColumn.path = path;
-      sortColumn.order = "asc";
-    }
-    */
     this.setState({ sortColumn: sortedColumn });
   };
 
-
   render() { 
-    const { currentPage, pageSize, products: allProducts, selectedCategory, sortColumn } = this.state;
-    const filtered = selectedCategory && selectedCategory._id > 0 ? 
-    allProducts.filter(x => x.Category === selectedCategory.name) : 
-    allProducts;
+    const { currentPage, pageSize, products: allProducts, selectedCategory, sortColumn, searchQuery } = this.state;
+    debugger;
+    let filtered = allProducts;
+    debugger;
+    if(searchQuery) {
+      filtered = allProducts.filter(m => 
+        m.Title.toLowerCase().startsWith(searchQuery.toLowerCase())
+      );
+    }
+    else if (selectedCategory && selectedCategory._id.length > 0) {
+      debugger;
+      filtered = allProducts.filter(x => x.Category._id === selectedCategory._id);       
+    }
 
     const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
 
@@ -107,6 +132,8 @@ class App extends Component {
               handlePageChange={this.handlePageChange}
               onSort={this.handleSort}
               sortColumn={sortColumn}
+              searchQuery={searchQuery}
+              handleSearch={this.handleSearch}
               >
             </ProductList>
           </div>

@@ -7,5 +7,6 @@ export const categories = [
 ];
 
 export function getCategories() {
+    debugger;
     return categories.filter(x => x);
 }

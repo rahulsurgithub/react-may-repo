@@ -10,6 +10,7 @@ class Form extends Component {
   };
 
   validate = () => {
+    debugger;
     const options = { abortEarly: false };
     const { error } = Joi.validate(this.state.data, this.schema, options);
     if (!error) return null;
@@ -20,6 +21,7 @@ class Form extends Component {
   };
 
   validateProperty = ({ name, value }) => {
+    debugger;
     const obj = { [name]: value };
     const schema = { [name]: this.schema[name] };
     const { error } = Joi.validate(obj, schema);
@@ -37,6 +39,7 @@ class Form extends Component {
   };
 
   handleChange = ({ currentTarget: input }) => {
+    debugger;
     const errors = { ...this.state.errors };
     const errorMessage = this.validateProperty(input);
     if (errorMessage) errors[input.name] = errorMessage;
