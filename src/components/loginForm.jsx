@@ -1,6 +1,7 @@
 import React from "react";
 import Joi from "joi-browser";
 import Form from "./common/form";
+import auth from "../services/authService";
 
 class LoginForm extends Form {
   state = {
@@ -17,9 +18,25 @@ class LoginForm extends Form {
       .label("Password")
   };
 
-  doSubmit = () => {
-    // Call the server
-    console.log("Submitted");
+  doSubmit = async () => {
+    try {
+      //Call the server
+      const { data } = this.state;
+      await auth.login(data.username, data.password);
+      //localStorage.setItem("token", jwt);
+      // redirect to home page.
+      //this.props.history.push("/");
+      // we should reload the page to reflect the change after login
+      window.location = "/";
+    } catch (ex) {
+      if (ex.response && ex.response.status === 400)
+      {
+        const errors = {...this.state.errors};
+        errors.username = ex.response.data;
+        this.setState({ errors });
+      }
+    }
+
   };
 
   render() {

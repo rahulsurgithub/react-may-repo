@@ -14,10 +14,12 @@ export function getProduct(productId) {
 export function saveProduct(product) {
     debugger;
     if (product.Id && product.Id != "-1") {
+        //edit
         const body = {...product};
         delete body.Id;
         return http.put(apiEndpoint + "/" + product.Id, body);
     }
+    //add
     const newProduct = {...product};
     delete newProduct.Id;
     return http.post(apiEndpoint, newProduct);
