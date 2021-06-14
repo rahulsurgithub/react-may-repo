@@ -95,6 +95,7 @@ class App extends Component {
 
   render() { 
     const { currentPage, pageSize, products: allProducts, selectedCategory, sortColumn, searchQuery } = this.state;
+    const { user } = this.props;
     debugger;
     let filtered = allProducts;
     debugger;
@@ -134,6 +135,7 @@ class App extends Component {
               sortColumn={sortColumn}
               searchQuery={searchQuery}
               handleSearch={this.handleSearch}
+              user={user}
               >
             </ProductList>
           </div>

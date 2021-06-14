@@ -13,11 +13,13 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Logout from './components/logout';
 import auth from './services/authService'
+import ProtectedRote from './components/common/protectedRoute';
 
 class Master extends Component {
     state = {};
 
     componentDidMount() {
+        debugger;
         const user = auth.getCurrentUser();
         this.setState({ user });
     }
@@ -29,8 +31,10 @@ class Master extends Component {
                 <NavBar user = { this.state.user } />
                 <main className="container">
                     <Switch>
-                        <Route path="/products/:Id" component={ProductDetailForm} />
-                        <Route path="/app" component={App}/>
+                        <ProtectedRote path="/products/:Id" component={ProductDetailForm}/>
+                        <Route path="/app" 
+                            render={props => <App {...props} user={this.state.user} />} 
+                        />
                         <Route path="/customers" component={Customer}/>
                         <Route path="/rentals" component={Rentals}/>
                         <Route path="/not-found" component={NotFound}/>

@@ -8,6 +8,9 @@ import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.min.css';
 
+console.log(process.env);
+console.log(process.env.REACT_APP_NAME);
+
 ReactDOM.render(
   <BrowserRouter>
     <Master />

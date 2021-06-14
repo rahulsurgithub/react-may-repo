@@ -6,6 +6,7 @@ class NavBar extends Component {
     state = {  }
     render() { 
         const { user } = this.props;
+        debugger;
         return ( 
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <Link className="navbar-brand" to="/app">

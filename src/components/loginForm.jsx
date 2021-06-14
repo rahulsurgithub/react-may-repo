@@ -27,7 +27,9 @@ class LoginForm extends Form {
       // redirect to home page.
       //this.props.history.push("/");
       // we should reload the page to reflect the change after login
-      window.location = "/";
+      const { state } = this.props.location;
+      debugger;
+      window.location = state ? state.from.pathname : '/';
     } catch (ex) {
       if (ex.response && ex.response.status === 400)
       {

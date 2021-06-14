@@ -22,19 +22,21 @@ class ProductList extends Component {
 
     render() { 
         const { length: count } = this.props.allProducts;
+        const { user } = this.props;
+        debugger;
 
         if(count === 0) 
             return <p>There are no products in database.</p>
 
         return (
             <React.Fragment>
-                <Link 
+               {user && <Link 
                     to="/products/new"
                     className="btn btn-primary"
                     style={{ marginBottom : 20 }}
                 >
                     New Product
-                </Link>
+                </Link>}
                 <p>There are {count} products.</p>
                 <SearchBox value={this.props.searchQuery} onChange={this.props.handleSearch}></SearchBox>
                 <table className="table">
@@ -45,7 +47,7 @@ class ProductList extends Component {
                             <th onClick={() => this.raiseSortEvent('Quantity')}>Quantity</th>
                             <th onClick={() => this.raiseSortEvent('Price')}>Price</th>
                             <th>Like</th>
-                            <th>Action</th>
+                            {(user) && <th>Action</th>}
                         </tr>
                     </thead>
                     <tbody>
@@ -58,11 +60,11 @@ class ProductList extends Component {
                                 <td>
                                     <Like liked={product.liked} onLike={() => this.props.onLike(product)} />
                                 </td>
-                                <td>
+                                {(user) &&  <td>
                                     <button type="button" 
                                     onClick={() => this.props.onDelete(product._id)} 
                                     className="btn btn-danger">Delete</button>
-                                </td>
+                                </td>}
                             </tr>
                         )) }
                     </tbody>
